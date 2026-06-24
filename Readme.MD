@@ -352,13 +352,6 @@ The engineering around the model is often the harder problem.
 
 Planned enhancements include:
 
-## Architecture
-
-* Service Layer Architecture
-* Repository Pattern
-* Dependency Injection
-* Abstract AI Provider Layer
-
 ## Product Features
 
 * Multi-page annotation support
