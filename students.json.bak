@@ -1,0 +1,66 @@
+{
+  "sean wong": {
+    "history": [
+      {
+        "subject": "Science",
+        "grade": "6/10",
+        "feedback": "**Grade: 6/10**\n\nGood attempt, but reasoning lacks clarity and sign errors need fixing.",
+        "timestamp": "2026-07-20T14:41:56.869587"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "N/A",
+        "feedback": "**Grade: N/A**\n\nNo feedback provided.",
+        "timestamp": "2026-07-20T14:51:09.177522"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "N/A",
+        "feedback": "**Grade: N/A**\n\nNo feedback provided.",
+        "timestamp": "2026-07-20T14:54:52.019708"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "N/A",
+        "feedback": "**Grade: N/A**\n\nNo feedback provided.",
+        "timestamp": "2026-07-20T14:57:25.515087"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "8.8/10",
+        "feedback": "**Grade: 8.8/10**\n\nGood work on most problems; correct answers for 1, 3, and 4. Minor errors in 2(a)(ii) and 2(b)(ii).",
+        "timestamp": "2026-07-20T20:27:13.776724"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "N/A",
+        "feedback": "**Grade: N/A**\n\nNo feedback provided.",
+        "timestamp": "2026-07-20T20:51:01.368504"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "9/10",
+        "feedback": "**Grade: 9/10**\n\nYour careful step-by-step approach is impressive; keep practicing clear notation and completing all parts for full credit.\n\nThe student correctly applied tangent properties, angle bisectors, and congruence, producing accurate angle measures and calculations for radius and length. Minor issues include unclear notation in the first step and omission of the shaded area result. Overall, the work is solid and shows good reasoning.\n\n**What you did well:**\n- Good work! \u2220PTQ = 50\u00b0 is correct.\n- Correct, PT = QT (tangents from same external point).\n- Well done, \u2220PQT = 65\u00b0 calculated correctly.\n- Correct, \u2220NTQ = \u2220NTP due to equal tangents.\n- Correct, PT = TQ (tangents).\n- Angles \u2220TNQ = \u2220TNP are equal; justification could be clearer but result is right.\n- Excellent, \u0394PNT \u2245 \u0394QNT by ASA congruence.\n- Correct, \u2220DBA = \u2220CPO = 29\u00b0 (alternate angles).\n- Good, \u2220CPA = 29\u00b0\u00d72 = 58\u00b0 (tangents from external point).\n- Correct, \u2220AOC = 180\u00b0 - 58\u00b0 = 122\u00b0 (central angle).\n- Correct, 2\u2220POA = 122\u00b0/2 = 61\u00b0 (OP bisects central angle).\n- Excellent, OA = 10 sin 29\u00b0 / sin 61\u00b0 = 5.54 cm (law of sines).\n- Correct, \u2220BOA = 40\u00b0\u00d72 = 80\u00b0 (central angle).\n- Correct, \u2220OAB = 180\u00b0 - 80\u00b0 = 50\u00b0 (isosceles triangle).\n- Perfect, x = 90\u00b0 - 50\u00b0 = 40\u00b0 (tangent \u27c2 radius).\n- Correct, \u2220OAT = 90\u00b0 (tangent perpendicular to radius).\n- Excellent, OT = \u221a(6\u00b2+8\u00b2) = 10 cm (Pythagorean theorem).\n- Correct, OA = OB = 6 cm (radii).\n- Correct, BT = 10 - 6 = 4 cm (simple subtraction).",
+        "timestamp": "2026-07-20T21:04:51.105530"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "6.5/10",
+        "feedback": "**Grade: 6.5/10**\n\nI love the effort you put into writing out your logical steps; keep practicing this detailed method!\n\nYou demonstrate a solid understanding of circle theorems, especially with tangents. Watch your calculation steps and keep checking your work for minor errors.\n\n**What you did well:**\n- Excellent reasoning here!\n- Correct approach!\n- Well done!\n- Nice method!\n- Correct logic!\n- Excellent work!\n\n**Corrections:**\n- Check your subtraction",
+        "timestamp": "2026-07-21T04:11:25.993640"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "N/A",
+        "feedback": "**Grade: N/A**\n\nNo feedback provided.",
+        "timestamp": "2026-07-21T04:22:10.212580"
+      },
+      {
+        "subject": "Mathematics",
+        "grade": "8/10",
+        "feedback": "**Grade: 8/10**\n\nThe student showed a strong grasp of circle theorems, particularly in recognizing congruent triangles and tangent properties. However, there were minor errors in angle calculations and misinterpretations of geometric relationships in a few steps. Overall, solid reasoning with a few slip-ups.\n\n**Corrections:**\n- Cross: Angle sum error in triangle PTA\u2014should be 180\u00b0.",
+        "timestamp": "2026-07-21T04:30:32.090218"
+      }
+    ]
+  }
+}
