@@ -4,6 +4,7 @@ import io
 import pytesseract
 import base64
 import logging
+import re
 from PIL import Image
 from docx import Document
 
@@ -39,7 +40,10 @@ def extract_docx(file_bytes: bytes) -> str:
         Concatenated paragraph text.
     """
     document = Document(io.BytesIO(file_bytes))
-    return "\n\n".join([paragraph.text for paragraph in document.paragraphs]).strip()
+    try:
+        return "\n\n".join([paragraph.text for paragraph in document.paragraphs]).strip()
+    finally:
+        document.close()
 
 
 def extract_image(file_bytes: bytes) -> str:
@@ -78,16 +82,20 @@ def extract_text_from_file(file_bytes: bytes, filename: str) -> str:
         raise ValueError("No filename provided.")
 
     ext = filename.lower().split(".")[-1]
-    
-    if ext == "pdf":
-        return extract_pdf(file_bytes)
-    elif ext == "docx":
-        return extract_docx(file_bytes)
-    elif ext in ("png", "jpg", "jpeg"):
-        return extract_image(file_bytes)
-    else:
-        raise ValueError(f"Unsupported file type: {filename}. "
-                        "Supported formats: .pdf, .docx, .png, .jpg, .jpeg")
+
+    try:
+        if ext == "pdf":
+            return extract_pdf(file_bytes)
+        elif ext == "docx":
+            return extract_docx(file_bytes)
+        elif ext in ("png", "jpg", "jpeg"):
+            return extract_image(file_bytes)
+        else:
+            raise ValueError(f"Unsupported file type: {filename}. "
+                            "Supported formats: .pdf, .docx, .png, .jpg, .jpeg")
+    except Exception as exc:
+        logger.error("Failed to extract text from %s: %s", filename, exc)
+        raise
 
 
 def image_to_base64(file_bytes: bytes) -> str:
@@ -106,7 +114,7 @@ def image_to_base64(file_bytes: bytes) -> str:
         if max(w, h) > MAX_IMAGE_DIMENSION:
             ratio = MAX_IMAGE_DIMENSION / max(w, h)
             new_size = (int(w * ratio), int(h * ratio))
-            logger.info(f"Resizing image from {w}x{h} to {new_size}")
+            logger.info("Resizing image from %dx%d to %s", w, h, new_size)
             image = image.resize(new_size, Image.LANCZOS)
 
         # Convert to RGB if necessary (e.g., RGBA or P mode)
@@ -119,3 +127,30 @@ def image_to_base64(file_bytes: bytes) -> str:
         return base64.b64encode(buf.read()).decode("utf-8")
     finally:
         image.close()
+
+
+def extract_grade(text: str) -> str:
+    """Extract a grade string from AI-generated text using regex patterns.
+
+    Supports formats like: X/10, Grade: A, X/100, X/20, X/50
+
+    Args:
+        text: The AI response text to parse.
+
+    Returns:
+        The extracted grade string, or "N/A" if no pattern matches.
+    """
+    if not text:
+        return "N/A"
+    patterns = [
+        r"\b(\d{1,2}(?:\.\d+)?)\s*/\s*10\b",
+        r"\bGrade[:\s]*([A-F][+-]?)\b",
+        r"\b(\d{1,2}(?:\.\d+)?)\s*/\s*(?:100|20|50)\b",
+    ]
+    for pat in patterns:
+        m = re.search(pat, text, re.I)
+        if m:
+            if "Grade" in pat:
+                return m.group(1)
+            return m.group(0).replace(" ", "")
+    return "N/A"

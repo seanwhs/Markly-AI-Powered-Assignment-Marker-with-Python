@@ -1,8 +1,11 @@
 # markup.py
+"""Visual annotation engine for teacher-style markup on assignment images."""
+
 import io
 import random
 import math
 import textwrap
+import os
 from PIL import Image, ImageDraw, ImageFont
 import logging
 import json
@@ -15,7 +18,15 @@ FONT_CACHE = {}
 
 
 def _get_font(size=24, bold=False):
-    """Load handwriting font with multi-level fallback."""
+    """Load handwriting font with multi-level fallback.
+
+    Args:
+        size: Font size in points.
+        bold: Whether to prefer bold variant.
+
+    Returns:
+        PIL ImageFont instance.
+    """
     key = (size, bold)
     if key in FONT_CACHE:
         return FONT_CACHE[key]
@@ -26,6 +37,10 @@ def _get_font(size=24, bold=False):
     candidates.extend([
         f"{FONTS_DIR}/Caveat-Regular.ttf",
         f"{FONTS_DIR}/PatrickHand-Regular.ttf",
+    ])
+
+    # System font fallbacks
+    system_fonts = [
         "/usr/share/fonts/truetype/liberation/LiberationSerif-Italic.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Italic.ttf",
         "/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf",
@@ -33,10 +48,13 @@ def _get_font(size=24, bold=False):
         "C:\\Windows\\Fonts\\segoeui.ttf",
         "C:\\Windows\\Fonts\\arial.ttf",
         "C:\\Windows\\Fonts\\times.ttf",
-    ])
+    ]
+    candidates.extend(system_fonts)
 
     font = None
     for path in candidates:
+        if not os.path.exists(path):
+            continue
         try:
             font = ImageFont.truetype(path, size)
             break
@@ -51,6 +69,7 @@ def _get_font(size=24, bold=False):
 
 
 def _jitter(val, amount=2.5):
+    """Apply random offset to simulate handwriting variability."""
     return val + _RNG.uniform(-amount, amount)
 
 
@@ -261,7 +280,15 @@ def _draw_encouragement_banner(draw, y, text, img_width):
 
 
 def draw_teacher_markup(image_bytes: bytes, markup_json_str: str) -> io.BytesIO:
-    """Draw rich teacher annotations on image and return PNG buffer."""
+    """Draw rich teacher annotations on image and return PNG buffer.
+
+    Args:
+        image_bytes: Raw image file bytes.
+        markup_json_str: JSON string with annotation instructions.
+
+    Returns:
+        BytesIO buffer containing the annotated PNG image.
+    """
     try:
         image = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
         draw = ImageDraw.Draw(image)
@@ -271,7 +298,7 @@ def draw_teacher_markup(image_bytes: bytes, markup_json_str: str) -> io.BytesIO:
         try:
             data = json.loads(markup_json_str) if isinstance(markup_json_str, str) else markup_json_str
         except Exception as e:
-            logger.warning(f"Failed to parse markup JSON: {e}")
+            logger.warning("Failed to parse markup JSON: %s", e)
 
         if not isinstance(data, dict):
             data = {}

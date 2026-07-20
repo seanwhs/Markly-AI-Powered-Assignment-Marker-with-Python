@@ -11,6 +11,7 @@ STYLES = getSampleStyleSheet()
 
 
 def _make_styles():
+    """Create custom paragraph styles for PDF reports."""
     title_style = ParagraphStyle("Title2", parent=STYLES["Title"], spaceAfter=6 * mm)
     heading_style = ParagraphStyle("Heading2b", parent=STYLES["Heading2"], spaceBefore=6 * mm, spaceAfter=3 * mm)
     body_style = ParagraphStyle("Body2", parent=STYLES["Normal"], fontSize=11, leading=15, spaceAfter=3 * mm)
@@ -18,6 +19,17 @@ def _make_styles():
 
 
 def create_pdf_report(student: str, subject: str, filename: str, feedback: str) -> io.BytesIO:
+    """Generate a text-only PDF grading report.
+
+    Args:
+        student: Student name.
+        subject: Subject name.
+        filename: Original assignment filename.
+        feedback: Grading feedback text.
+
+    Returns:
+        BytesIO buffer containing the PDF.
+    """
     buf = io.BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=20 * mm, rightMargin=20 * mm,
                             topMargin=20 * mm, bottomMargin=20 * mm)
@@ -39,6 +51,32 @@ def create_marked_pdf(student: str, subject: str, filename: str,
                       marked_image_buffer: io.BytesIO,
                       overall_feedback: str, grade: str,
                       corrections: list, encouragement: str = "") -> io.BytesIO:
+    """Generate a two-page PDF with annotated image and structured feedback.
+
+    Args:
+        student: Student name.
+        subject: Subject name.
+        filename: Original assignment filename.
+        marked_image_buffer: BytesIO containing the annotated image.
+        overall_feedback: Overall teacher feedback text.
+        grade: Grade string (e.g., "8/10").
+        corrections: List of correction dicts with "text" keys.
+        encouragement: Optional encouragement text.
+
+    Returns:
+        BytesIO buffer containing the PDF.
+
+    Raises:
+        ValueError: If marked_image_buffer is None or empty.
+    """
+    if marked_image_buffer is None:
+        raise ValueError("marked_image_buffer cannot be None")
+
+    marked_image_buffer.seek(0, io.SEEK_END)
+    if marked_image_buffer.tell() == 0:
+        raise ValueError("marked_image_buffer is empty")
+    marked_image_buffer.seek(0)
+
     buf = io.BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=15 * mm, rightMargin=15 * mm,
                             topMargin=15 * mm, bottomMargin=15 * mm)
@@ -51,7 +89,6 @@ def create_marked_pdf(student: str, subject: str, filename: str,
         Spacer(1, 4 * mm),
     ]
 
-    marked_image_buffer.seek(0)
     img = Image(marked_image_buffer, width=170 * mm, height=230 * mm)
     story.append(img)
 

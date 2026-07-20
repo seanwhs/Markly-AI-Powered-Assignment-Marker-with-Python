@@ -24,7 +24,7 @@ def load_db() -> dict:
             data = json.load(f)
             return data if isinstance(data, dict) else {}
     except (json.JSONDecodeError, OSError) as exc:
-        logger.warning(f"Failed to load database: {exc}")
+        logger.warning("Failed to load database: %s", exc)
         return {}
 
 
@@ -33,10 +33,26 @@ def save_db(db: dict) -> None:
 
     Args:
         db: Dictionary of student records to persist.
+
+    Raises:
+        TypeError: If db is not a dictionary.
+        ValueError: If db cannot be serialized to JSON.
     """
+    if not isinstance(db, dict):
+        raise TypeError(f"db must be a dict, got {type(db).__name__}")
+
+    # Validate JSON serializability before writing
+    try:
+        json.dumps(db)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"Database is not JSON serializable: {exc}")
+
     if os.path.exists(DB_FILE):
         backup = DB_FILE + ".bak"
-        shutil.copy2(DB_FILE, backup)
+        try:
+            shutil.copy2(DB_FILE, backup)
+        except OSError as exc:
+            logger.warning("Failed to create backup: %s", exc)
 
     tmp = DB_FILE + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
@@ -56,7 +72,13 @@ def add_record(student: str, subject: str, grade: str, feedback: str) -> None:
         subject: Subject name.
         grade: Grade string (e.g., "8/10").
         feedback: Full feedback text.
+
+    Raises:
+        ValueError: If student name is empty.
     """
+    if not student or not student.strip():
+        raise ValueError("Student name cannot be empty")
+
     with _db_lock:
         db = load_db()
         key = student.strip().lower()
@@ -70,7 +92,7 @@ def add_record(student: str, subject: str, grade: str, feedback: str) -> None:
             "timestamp": datetime.now().isoformat()
         })
         save_db(db)
-        logger.info(f"Recorded grade for {student}: {subject} = {grade}")
+        logger.info("Recorded grade for %s: %s = %s", student, subject, grade)
 
 
 def get_student_history(name: str) -> str:
@@ -82,6 +104,9 @@ def get_student_history(name: str) -> str:
     Returns:
         Formatted string of last 5 records, or "No previous records."
     """
+    if not name or not name.strip():
+        return "No previous records."
+
     db = load_db()
     key = name.strip().lower()
     if key not in db:
